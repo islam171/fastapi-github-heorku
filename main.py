@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String
+from database import Base, engine
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -7,6 +11,12 @@ class Item(BaseModel):
     name: str
     price: float
     is_offer: bool | None = None
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
 
 @app.get("/")
 def read_root():
